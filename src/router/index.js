@@ -1,34 +1,50 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHistory } from "vue-router";
+import { loadLayoutMiddleware } from "./middleware/loadLayoutMiddleware";
+import { loadAuthMiddleware } from "./middleware/loadAuthMiddleware";
+import { loadGuestMiddleware } from "./middleware/loadGuestMiddleware";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    },
-    {
-      path: '/login',
-      name: 'login',
+      path: "/",
+      name: "home",
       meta: {
-        layout: false
+        layout: "DashboardLayout",
+        middleware: "auth",
       },
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/LoginView.vue')
-    }
-  ]
-})
+      component: () => import("../views/DashboardView.vue"),
+    },
+    {
+      path: "/login",
+      name: "login",
+      meta: {
+        middleware: "guest",
+      },
+      component: () => import("../views/LoginView.vue"),
+    },
+    {
+      path: "/register",
+      name: "register",
+      meta: {
+        middleware: "guest",
+      },
+      component: () => import("../views/RegisterView.vue"),
+    },
+  ],
+});
 
-export default router
+// router.beforeEach(loadLayoutMiddleware)
+
+router.beforeEach(async (to, from, next) => {
+  await loadLayoutMiddleware(to);
+
+  // if (to.meta.middleware === "auth")
+  //   await loadAuthMiddleware(to, from, next);
+  // else if (to.meta.middleware === "guest")
+  //   await loadGuestMiddleware(to, from, next);
+  // else
+    next();
+});
+
+export default router;

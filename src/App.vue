@@ -1,11 +1,10 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import Header from './components/Header.vue'
-import Footer from './components/Footer.vue'
+import AppLayout from './layouts/AppLayout.vue';
 </script>
 
 <template>
-  <Header />
-  <RouterView class="my-5 px-4" />
-  <Footer />
+  <AppLayout>
+    <RouterView class="my-5 px-4" />
+  </AppLayout>
 </template>

@@ -1,0 +1,23 @@
+@layer base {
+}
+
+@layer components {
+    .ptm-input {
+        @apply my-2 bg-slate-50 py-2.5 px-10 rounded-3xl text-sm border border-slate-300;
+    }
+
+    .ptm-button {
+        @apply bg-blue-600 hover:bg-blue-700 text-white text-sm py-2.5 px-6 rounded-3xl;
+    }
+
+    .ptm-link {
+        @apply text-blue-700 hover:text-blue-800 hover:underline;
+    }
+
+    .create-btn {
+        @apply bg-blue-600 text-white rounded-3xl py-1 px-4 text-sm;
+    }
+}
+
+@layer utilities {
+}
