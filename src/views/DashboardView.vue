@@ -9,10 +9,18 @@ import TaskCardComponent from '@/components/TaskCardComponent.vue';
         <h1 class="text-2xl font-semibold">Tasks</h1>
         <button class="create-btn lg:hidden">Create Task</button>
       </div>
-      <div class="space-x-2 w-full flex items-center justify-end mt-4 lg:mt-0">
-        <span class="text-xs text-slate-500">Filters:</span>
-        <button class="border border-slate-200 rounded-3xl text-xs px-4 py-1">All Statuses</button>
-        <button class="border border-slate-200 rounded-3xl text-xs px-4 py-1">All Time</button>
+      <div class="flex w-full flex-col lg:flex-row lg:justify-end">
+        <div class="space-x-2 w-fit flex items-center justify-start lg:justify-end mt-4 lg:mt-0 lg:border-r lg:border-r-slate-200 lg:pr-4 lg:mr-4">
+          <span class="text-xs text-slate-500">Sort by:</span>
+          <button class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1">Date</button>
+          <button class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1">Status</button>
+        </div>
+
+        <div class="space-x-2 w-fit flex items-center justify-start lg:justify-end mt-4 lg:mt-0">
+          <span class="text-xs text-slate-500">Filters:</span>
+          <button class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1">All Statuses</button>
+          <button class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1">All Time</button>
+        </div>
       </div>
     </div>
     <div class="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
