@@ -1,7 +1,24 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+
 const number = ref(Math.floor(Math.random() * 3));
+
 const open = ref(false);
+const dropdown = ref(null);
+
+const handleClickOutside = (event) => {
+    if (dropdown.value && !dropdown.value.contains(event.target)) {
+        open.value = false;
+    }
+}
+
+onMounted(() => {
+    window.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+    window.removeEventListener('click', handleClickOutside)
+})
 </script>
 
 <template>
@@ -12,7 +29,7 @@ const open = ref(false);
                     <span class="text-slate-400 font-extralight text-xs block">30 November 2024</span>
                     <span class="font-semibold text-base mt-1 block text-slate-700">Task Title</span>
                 </div>
-                <div @mouseover="open = true" @mouseleave="open = false">
+                <div ref="dropdown">
                     <span @click="open = !open"
                         class="text-sm font-medium text-slate-500 cursor-pointer block">...</span>
                     <div v-if="open" class="border border-slate-100 bg-white rounded-xl text-xs p-2 absolute top-5 right-0">
