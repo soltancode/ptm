@@ -38,6 +38,7 @@ const login = async () => {
   const data = await response.json();
 
   if (response.status == 200) {
+    localStorage.setItem('username', data.user.name);
     authStore.setToken(data.token);
     router.push('/');
   } else {

@@ -3,9 +3,11 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { RouterLink } from 'vue-router'
 import LogoComponent from './LogoComponent.vue';
 import DropdownIconComponent from './DropdownIconComponent.vue';
+import { useAuthStore } from '@/stores/auth';
 
 const profileMenu = ref(false);
 const dropdown = ref(null);
+const authStore = useAuthStore();
 
 const handleClickOutside = (event) => {
     if (dropdown.value && !dropdown.value.contains(event.target)) {
@@ -28,7 +30,7 @@ onBeforeUnmount(() => {
         <nav class="ml-auto space-x-5 text-sm flex flex-col lg:flex-row items-end lg:items-center space-y-px">
             <div class="relative cursor-pointer" ref="dropdown">
                 <span @click="profileMenu = !profileMenu" class="text-slate-400 font-light flex">
-                    Hi,&nbsp;<span class="text-slate-800 font-medium">Soltan!</span>
+                    Hi,&nbsp;<span class="text-slate-800 font-medium">{{ authStore.getUsername }}!</span>
                     <DropdownIconComponent class="w-5" />
                 </span>
 
