@@ -30,7 +30,7 @@ const login = async () => {
 
     const data = await response.json();
     console.log('Login successful: ', data);
-  } catch (error) {
+  } catch {
     console.error('Error during login.');
   }
 };
