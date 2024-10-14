@@ -52,6 +52,34 @@ const searchTrigger = () => {
   fetchData();
 }
 
+const sortByStatusTrigger = () => {
+  sortDate.value = null;
+
+  if (sortStatus.value === null) {
+    sortStatus.value = "ASC";
+  } else if (sortStatus.value === "ASC") {
+    sortStatus.value = "DESC";
+  } else if (sortStatus.value === "DESC") {
+    sortStatus.value = "ASC";
+  }
+
+  fetchData();
+}
+
+const sortByDateTrigger = () => {
+  sortStatus.value = null;
+
+  if (sortDate.value === null) {
+    sortDate.value = "ASC";
+  } else if (sortDate.value === "ASC") {
+    sortDate.value = "DESC";
+  } else if (sortDate.value === "DESC") {
+    sortDate.value = "ASC";
+  }
+
+  fetchData();
+}
+
 onMounted(() => {
   if (tasksStore.tasks === null) {
     fetchData();
@@ -72,8 +100,9 @@ onMounted(() => {
           <div class="flex flex-col lg:flex-row items-center">
             <h1 class="text-2xl font-semibold">Tasks</h1>
             <form @submit.prevent="searchTrigger()">
-              <input v-model="search" class="text-sm bg-slate-50 border border-slate-200 rounded-3xl px-3 py-1 hidden lg:block ml-4" type="text"
-                placeholder="Search...">
+              <input v-model="search"
+                class="text-sm bg-slate-50 border border-slate-200 rounded-3xl px-3 py-1 hidden lg:block ml-4"
+                type="text" placeholder="Search...">
             </form>
           </div>
         </div>
@@ -81,18 +110,23 @@ onMounted(() => {
       </div>
       <div class="flex w-full flex-col lg:flex-row lg:justify-end">
         <form @submit.prevent="searchTrigger()">
-          <input v-model="search" class="w-full text-sm bg-slate-200 rounded-3xl px-3 py-2 lg:hidden mt-4" type="text" placeholder="Search...">
+          <input v-model="search" class="w-full text-sm bg-slate-200 rounded-3xl px-3 py-2 lg:hidden mt-4" type="text"
+            placeholder="Search...">
         </form>
 
-        <div class="space-x-2 w-fit flex items-center justify-start lg:justify-end mt-4 lg:mt-0 lg:border-r lg:border-r-slate-200 lg:pr-4 lg:mr-4">
+        <div
+          class="space-x-2 w-fit flex items-center justify-start lg:justify-end mt-4 lg:mt-0 lg:border-r lg:border-r-slate-200 lg:pr-4 lg:mr-4">
           <span class="text-xs text-slate-500">Sort by:</span>
-          <button
-            class="text-nowrap border bg-slate-50 border-slate-200 rounded-3xl text-xs px-4 py-1 flex items-center">
-            <DropdownIconComponent class="w-4 mr-1 mt-px" />
+          <button @click="sortByDateTrigger()"
+          :class="{'bg-slate-50': sortDate}"
+            class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1 flex items-center">
+            <DropdownIconComponent v-if="sortDate" :class="{'rotate-180': sortDate == 'ASC'}" class="w-4 mr-1 mt-px" />
             Date
           </button>
-          <button class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1 flex items-center">
-            <DropdownIconComponent class="w-4 mr-1 mt-px hidden" />
+          <button @click="sortByStatusTrigger()"
+          :class="{'bg-slate-50': sortStatus}"
+          class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1 flex items-center">
+            <DropdownIconComponent v-if="sortStatus" :class="{'rotate-180': sortStatus == 'ASC'}" class="w-4 mr-1 mt-px" />
             Status
           </button>
         </div>
