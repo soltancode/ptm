@@ -35,8 +35,7 @@ onBeforeUnmount(() => {
                     <span class="font-semibold text-base mt-1 block text-slate-700">{{ task.title }}</span>
                 </div>
                 <div ref="dropdown">
-                    <span @click="open = !open"
-                        class="text-sm font-medium text-slate-500 cursor-pointer block">...</span>
+                    <span @click="open = !open" class="text-sm font-medium text-slate-500 cursor-pointer block">...</span>
                     <div v-if="open" class="border border-slate-100 bg-white rounded-xl text-xs p-2 absolute top-5 right-0">
                         <ul class="space-y-1">
                             <li class="cursor-pointer hover:text-blue-600">Edit Task</li>

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, onBeforeUnmount, ref } from 'vue';
 import TaskCardComponent from '@/components/TaskCardComponent.vue';
 import DropdownIconComponent from '@/components/DropdownIconComponent.vue';
 import { useAuthStore } from '@/stores/auth';
@@ -9,6 +9,9 @@ const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 const authStore = useAuthStore();
 const tasksStore = useTasksStore();
 const loading = ref(false);
+
+const statusDropdown = ref(null)
+const statusDropdownOpen = ref(false)
 
 const page = ref(1);
 const status = ref(null);
@@ -56,11 +59,11 @@ const sortByStatusTrigger = () => {
   sortDate.value = null;
 
   if (sortStatus.value === null) {
-    sortStatus.value = "ASC";
-  } else if (sortStatus.value === "ASC") {
     sortStatus.value = "DESC";
   } else if (sortStatus.value === "DESC") {
     sortStatus.value = "ASC";
+  } else if (sortStatus.value === "ASC") {
+    sortStatus.value = "DESC";
   }
 
   fetchData();
@@ -70,20 +73,39 @@ const sortByDateTrigger = () => {
   sortStatus.value = null;
 
   if (sortDate.value === null) {
-    sortDate.value = "ASC";
-  } else if (sortDate.value === "ASC") {
     sortDate.value = "DESC";
   } else if (sortDate.value === "DESC") {
     sortDate.value = "ASC";
+  } else if (sortDate.value === "ASC") {
+    sortDate.value = "DESC";
   }
 
   fetchData();
 }
 
+const statusFilterTrigger = (statusOption) => {
+  status.value = statusOption;
+  statusDropdownOpen.value = false;
+
+  fetchData();
+}
+
+const handleClickOutside = (event) => {
+    if (statusDropdown.value && !statusDropdown.value.contains(event.target)) {
+        statusDropdownOpen.value = false;
+    }
+}
+
 onMounted(() => {
+  window.addEventListener('click', handleClickOutside)
+
   if (tasksStore.tasks === null) {
     fetchData();
   }
+})
+
+onBeforeUnmount(() => {
+    window.removeEventListener('click', handleClickOutside)
 })
 </script>
 
@@ -117,26 +139,39 @@ onMounted(() => {
         <div
           class="space-x-2 w-fit flex items-center justify-start lg:justify-end mt-4 lg:mt-0 lg:border-r lg:border-r-slate-200 lg:pr-4 lg:mr-4">
           <span class="text-xs text-slate-500">Sort by:</span>
-          <button @click="sortByDateTrigger()"
-          :class="{'bg-slate-50': sortDate}"
+          <button @click="sortByDateTrigger()" :class="{ 'bg-slate-50': sortDate }"
             class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1 flex items-center">
-            <DropdownIconComponent v-if="sortDate" :class="{'rotate-180': sortDate == 'ASC'}" class="w-4 mr-1 mt-px" />
+            <DropdownIconComponent v-if="sortDate" :class="{ 'rotate-180': sortDate == 'ASC' }"
+              class="w-4 mr-1 mt-px" />
             Date
           </button>
-          <button @click="sortByStatusTrigger()"
-          :class="{'bg-slate-50': sortStatus}"
-          class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1 flex items-center">
-            <DropdownIconComponent v-if="sortStatus" :class="{'rotate-180': sortStatus == 'ASC'}" class="w-4 mr-1 mt-px" />
+          <button @click="sortByStatusTrigger()" :class="{ 'bg-slate-50': sortStatus }"
+            class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1 flex items-center">
+            <DropdownIconComponent v-if="sortStatus" :class="{ 'rotate-180': sortStatus == 'ASC' }"
+              class="w-4 mr-1 mt-px" />
             Status
           </button>
         </div>
 
         <div class="space-x-2 w-fit flex items-center justify-start lg:justify-end mt-4 lg:mt-0">
           <span class="text-xs text-slate-500">Filters:</span>
-          <button class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1 flex items-center">
-            All Statuses
-            <DropdownIconComponent class="w-4 ml-1 mt-px" />
-          </button>
+          <div ref="statusDropdown" class="relative">
+            <button @click="statusDropdownOpen = !statusDropdownOpen" class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1 flex items-center">
+              <span v-if="status === null">All Statuses</span>
+              <span v-else-if="status == 0">To Do</span>
+              <span v-else-if="status == 1">In Progress</span>
+              <span v-else-if="status == 2">Completed</span>
+              <DropdownIconComponent class="w-4 ml-1 mt-px" />
+            </button>
+            <div v-if="statusDropdownOpen" class="border border-slate-100 w-28 bg-white rounded-xl text-xs p-2 absolute top-8 right-0">
+              <ul class="space-y-1">
+                <li @click="statusFilterTrigger(null)" :class="{'text-blue-700': status === null}" class="cursor-pointer hover:text-blue-600">All Statuses</li>
+                <li @click="statusFilterTrigger(0)" :class="{'text-blue-700': status === 0}" class="cursor-pointer hover:text-blue-600">To Do</li>
+                <li @click="statusFilterTrigger(1)" :class="{'text-blue-700': status === 1}" class="cursor-pointer hover:text-blue-600">In Progress</li>
+                <li @click="statusFilterTrigger(2)" :class="{'text-blue-700': status === 2}" class="cursor-pointer hover:text-blue-600">Completed</li>
+              </ul>
+            </div>
+          </div>
           <button class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1 flex items-center">
             All Time
             <DropdownIconComponent class="w-4 ml-1 mt-px" />
