@@ -39,11 +39,11 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   await loadLayoutMiddleware(to);
 
-  // if (to.meta.middleware === "auth")
-  //   await loadAuthMiddleware(to, from, next);
-  // else if (to.meta.middleware === "guest")
-  //   await loadGuestMiddleware(to, from, next);
-  // else
+  if (to.meta.middleware === "auth")
+    await loadAuthMiddleware(to, from, next);
+  else if (to.meta.middleware === "guest")
+    await loadGuestMiddleware(to, from, next);
+  else
     next();
 });
 
