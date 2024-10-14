@@ -4,6 +4,33 @@ import TaskCardComponent from '@/components/TaskCardComponent.vue';
 import DropdownIconComponent from '@/components/DropdownIconComponent.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useTasksStore } from '@/stores/tasks';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+
+const date = ref();
+
+const handleDate = (modelData) => {
+  date.value = modelData;
+
+  if (modelData !== null) {
+    startDate.value = convertDateFormat(modelData[0]);
+    endDate.value = convertDateFormat(modelData[1]);
+  } else {
+    startDate.value = null;
+    endDate.value = null;
+  }
+
+  fetchData();
+}
+
+const convertDateFormat = (theDate) => {
+  const date = new Date(theDate);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 const authStore = useAuthStore();
@@ -100,9 +127,9 @@ const changePage = (pageNumber) => {
 }
 
 const handleClickOutside = (event) => {
-    if (statusDropdown.value && !statusDropdown.value.contains(event.target)) {
-        statusDropdownOpen.value = false;
-    }
+  if (statusDropdown.value && !statusDropdown.value.contains(event.target)) {
+    statusDropdownOpen.value = false;
+  }
 }
 
 onMounted(() => {
@@ -114,7 +141,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-    window.removeEventListener('click', handleClickOutside)
+  window.removeEventListener('click', handleClickOutside)
 })
 </script>
 
@@ -141,7 +168,7 @@ onBeforeUnmount(() => {
       </div>
       <div class="flex w-full flex-col lg:flex-row lg:justify-end">
         <form @submit.prevent="searchTrigger()">
-          <input v-model="search" class="w-full text-sm bg-slate-200 rounded-3xl px-3 py-2 lg:hidden mt-4" type="text"
+          <input v-model="search" class="w-full text-sm bg-slate-50 border border-slate-200 rounded-3xl px-3 py-2 lg:hidden mt-4" type="text"
             placeholder="Search...">
         </form>
 
@@ -166,27 +193,31 @@ onBeforeUnmount(() => {
           <span class="text-xs text-slate-500">Filters:</span>
 
           <div ref="statusDropdown" class="relative z-40">
-            <button @click="statusDropdownOpen = !statusDropdownOpen" class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1 flex items-center">
+            <button @click="statusDropdownOpen = !statusDropdownOpen"
+              class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1 flex items-center">
               <span v-if="status === null">All Statuses</span>
               <span v-else-if="status == 0">To Do</span>
               <span v-else-if="status == 1">In Progress</span>
               <span v-else-if="status == 2">Completed</span>
               <DropdownIconComponent class="w-4 ml-1 mt-px" />
             </button>
-            <div v-if="statusDropdownOpen" class="border border-slate-100 w-28 bg-white rounded-xl text-xs p-2 absolute top-8 right-0">
+            <div v-if="statusDropdownOpen"
+              class="border border-slate-100 w-28 bg-white rounded-xl text-xs p-2 absolute top-8 right-0">
               <ul class="space-y-1">
-                <li @click="statusFilterTrigger(null)" :class="{'text-blue-700': status === null}" class="cursor-pointer hover:text-blue-600">All Statuses</li>
-                <li @click="statusFilterTrigger(0)" :class="{'text-blue-700': status === 0}" class="cursor-pointer hover:text-blue-600">To Do</li>
-                <li @click="statusFilterTrigger(1)" :class="{'text-blue-700': status === 1}" class="cursor-pointer hover:text-blue-600">In Progress</li>
-                <li @click="statusFilterTrigger(2)" :class="{'text-blue-700': status === 2}" class="cursor-pointer hover:text-blue-600">Completed</li>
+                <li @click="statusFilterTrigger(null)" :class="{ 'text-blue-700': status === null }"
+                  class="cursor-pointer hover:text-blue-600">All Statuses</li>
+                <li @click="statusFilterTrigger(0)" :class="{ 'text-blue-700': status === 0 }"
+                  class="cursor-pointer hover:text-blue-600">To Do</li>
+                <li @click="statusFilterTrigger(1)" :class="{ 'text-blue-700': status === 1 }"
+                  class="cursor-pointer hover:text-blue-600">In Progress</li>
+                <li @click="statusFilterTrigger(2)" :class="{ 'text-blue-700': status === 2 }"
+                  class="cursor-pointer hover:text-blue-600">Completed</li>
               </ul>
             </div>
           </div>
 
-          <button class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1 flex items-center">
-            All Time
-            <DropdownIconComponent class="w-4 ml-1 mt-px" />
-          </button>
+          <VueDatePicker class="max-w-32" :range="{ partialRange: false }" :model-value="date"
+            @update:model-value="handleDate"></VueDatePicker>
         </div>
       </div>
     </div>
@@ -199,9 +230,18 @@ onBeforeUnmount(() => {
       </div>
     </div>
     <div class="pages flex mt-6 space-x-2">
-      <button v-for="pageNumber in lastPage" @click="changePage(pageNumber)" :class="{'bg-slate-50': page == pageNumber, 'hover:bg-slate-50': page != pageNumber}" class="w-6 h-6 text-slate-500 border border-slate-200 text-sm flex items-center justify-center rounded-xl p-4">
+      <button v-for="pageNumber in lastPage" @click="changePage(pageNumber)"
+        :class="{ 'bg-slate-50': page == pageNumber, 'hover:bg-slate-50': page != pageNumber }"
+        class="w-6 h-6 text-slate-500 border border-slate-200 text-sm flex items-center justify-center rounded-xl p-4">
         {{ pageNumber }}
       </button>
     </div>
   </div>
 </template>
+
+<style>
+.dp__pointer {
+  /* max-height: 25px; */
+  @apply text-xs rounded-3xl;
+}
+</style>
