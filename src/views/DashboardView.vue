@@ -13,6 +13,8 @@ const loading = ref(false);
 const statusDropdown = ref(null)
 const statusDropdownOpen = ref(false)
 
+const lastPage = ref(10);
+
 const page = ref(1);
 const status = ref(null);
 const startDate = ref(null);
@@ -48,6 +50,7 @@ const fetchData = async () => {
 
   if (response.status == 200) {
     tasksStore.tasks = data.data.data;
+    lastPage.value = data.data.last_page;
   }
 };
 
@@ -86,6 +89,12 @@ const sortByDateTrigger = () => {
 const statusFilterTrigger = (statusOption) => {
   status.value = statusOption;
   statusDropdownOpen.value = false;
+
+  fetchData();
+}
+
+const changePage = (pageNumber) => {
+  page.value = pageNumber;
 
   fetchData();
 }
@@ -155,7 +164,7 @@ onBeforeUnmount(() => {
 
         <div class="space-x-2 w-fit flex items-center justify-start lg:justify-end mt-4 lg:mt-0">
           <span class="text-xs text-slate-500">Filters:</span>
-          <div ref="statusDropdown" class="relative">
+          <div ref="statusDropdown" class="relative z-40">
             <button @click="statusDropdownOpen = !statusDropdownOpen" class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1 flex items-center">
               <span v-if="status === null">All Statuses</span>
               <span v-else-if="status == 0">To Do</span>
@@ -186,6 +195,11 @@ onBeforeUnmount(() => {
         <span class="font-semibold text-8xl text-slate-200">+</span>
         <span class="text-sm text-slate-300 mb-6">Create New Task</span>
       </div>
+    </div>
+    <div class="pages flex mt-6 space-x-2">
+      <button v-for="pageNumber in lastPage" @click="changePage(pageNumber)" :class="{'bg-slate-50': page == pageNumber, 'hover:bg-slate-50': page != pageNumber}" class="w-6 h-6 text-slate-500 border border-slate-200 text-sm flex items-center justify-center rounded-xl p-4">
+        {{ pageNumber }}
+      </button>
     </div>
   </div>
 </template>
