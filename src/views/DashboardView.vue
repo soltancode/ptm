@@ -164,6 +164,7 @@ onBeforeUnmount(() => {
 
         <div class="space-x-2 w-fit flex items-center justify-start lg:justify-end mt-4 lg:mt-0">
           <span class="text-xs text-slate-500">Filters:</span>
+
           <div ref="statusDropdown" class="relative z-40">
             <button @click="statusDropdownOpen = !statusDropdownOpen" class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1 flex items-center">
               <span v-if="status === null">All Statuses</span>
@@ -181,6 +182,7 @@ onBeforeUnmount(() => {
               </ul>
             </div>
           </div>
+
           <button class="text-nowrap border border-slate-200 rounded-3xl text-xs px-4 py-1 flex items-center">
             All Time
             <DropdownIconComponent class="w-4 ml-1 mt-px" />
