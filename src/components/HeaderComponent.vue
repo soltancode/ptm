@@ -70,7 +70,9 @@ onBeforeUnmount(() => {
                 </div>
             </div>
 
-            <button class="create-btn hidden lg:block">Create</button>
+            <RouterLink to="/create">
+                <button class="create-btn hidden lg:block">Create</button>
+            </RouterLink>
         </nav>
     </header>
 </template>

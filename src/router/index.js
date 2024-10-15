@@ -16,6 +16,15 @@ const router = createRouter({
       component: () => import("../views/DashboardView.vue"),
     },
     {
+      path: "/create",
+      name: "create",
+      meta: {
+        layout: "DashboardLayout",
+        middleware: "auth",
+      },
+      component: () => import("../views/CreateTask.vue"),
+    },
+    {
       path: "/login",
       name: "login",
       meta: {

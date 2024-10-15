@@ -197,7 +197,9 @@ onBeforeUnmount(() => {
             </form>
           </div>
         </div>
-        <button class="create-btn lg:hidden">Create Task</button>
+        <RouterLink to="/create">
+          <button class="create-btn lg:hidden">Create Task</button>
+        </RouterLink>
       </div>
       <div class="flex w-full flex-col lg:flex-row lg:justify-end">
         <form @submit.prevent="searchTrigger()">
@@ -256,12 +258,15 @@ onBeforeUnmount(() => {
       </div>
     </div>
     <div class="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <TaskCardComponent @triggerEvent="fetchData()" :task="task" v-for="(task, index) in tasksStore.tasks" :key="index + 'card'" />
-      <div
-        class="border border-slate-200 cursor-pointer bg-slate-50 hover:bg-slate-100 p-5 rounded-3xl flex items-center flex-col justify-center">
-        <span class="font-semibold text-8xl text-slate-200">+</span>
-        <span class="text-sm text-slate-300 mb-6">Create New Task</span>
-      </div>
+      <TaskCardComponent @triggerEvent="fetchData()" :task="task" v-for="(task, index) in tasksStore.tasks"
+        :key="index + 'card'" />
+      <RouterLink to="/create">
+        <div
+          class="border border-slate-200 cursor-pointer bg-slate-50 hover:bg-slate-100 p-5 rounded-3xl flex items-center flex-col justify-center">
+          <span class="font-semibold text-8xl text-slate-200">+</span>
+          <span class="text-sm text-slate-300 mb-6">Create New Task</span>
+        </div>
+      </RouterLink>
     </div>
     <div class="pages flex mt-6 space-x-2">
       <button v-for="(pageNumber, index) in lastPage" :key="index + 'page'" @click="changePage(pageNumber)"
