@@ -7,7 +7,24 @@ import { useTasksStore } from '@/stores/tasks';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import { useRouter } from 'vue-router';
+import { Pie } from 'vue-chartjs'
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 
+ChartJS.register(ArcElement, Tooltip, Legend)
+
+const pieData = {
+  labels: ['To Do', 'In Progress', 'Completed'],
+  datasets: [
+    {
+      backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
+      data: [0, 0, 0]
+    }
+  ]
+};
+const pieOptions = {
+  responsive: false,
+  maintainAspectRatio: false
+};
 const router = useRouter();
 const date = ref();
 
@@ -75,6 +92,17 @@ const fetchData = async () => {
   });
 
   const data = await response.json();
+
+  for (let i in data.report) {
+    if (data.report[i].status == 0) {
+      pieData.datasets[0].data[0] = data.report[i].total
+    } else if (data.report[i].status == 1) {
+      pieData.datasets[0].data[1] = data.report[i].total
+    } else if (data.report[i].status == 2) {
+      pieData.datasets[0].data[2] = data.report[i].total
+    }
+  }
+
   loading.value = false;
 
   if (response.status == 200) {
@@ -241,6 +269,11 @@ onBeforeUnmount(() => {
         class="w-6 h-6 text-slate-500 border border-slate-200 text-sm flex items-center justify-center rounded-xl p-4">
         {{ pageNumber }}
       </button>
+    </div>
+
+    <div class="mt-8">
+      <h1 class="text-2xl font-semibold">Analytics</h1>
+      <Pie v-if="!loading" class="mt-4 mx-auto lg:ml-0 lg:mr-auto" :data="pieData" :options="pieOptions" />
     </div>
   </div>
 </template>
