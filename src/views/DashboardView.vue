@@ -6,8 +6,28 @@ import { useAuthStore } from '@/stores/auth';
 import { useTasksStore } from '@/stores/tasks';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const date = ref();
+
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+const authStore = useAuthStore();
+const tasksStore = useTasksStore();
+const loading = ref(false);
+
+const statusDropdown = ref(null)
+const statusDropdownOpen = ref(false)
+
+const lastPage = ref(10);
+
+const page = ref(1);
+const status = ref(null);
+const startDate = ref(null);
+const endDate = ref(null);
+const search = ref("");
+const sortDate = ref(null);
+const sortStatus = ref(null);
 
 const handleDate = (modelData) => {
   date.value = modelData;
@@ -31,24 +51,6 @@ const convertDateFormat = (theDate) => {
 
   return `${year}-${month}-${day}`;
 }
-
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-const authStore = useAuthStore();
-const tasksStore = useTasksStore();
-const loading = ref(false);
-
-const statusDropdown = ref(null)
-const statusDropdownOpen = ref(false)
-
-const lastPage = ref(10);
-
-const page = ref(1);
-const status = ref(null);
-const startDate = ref(null);
-const endDate = ref(null);
-const search = ref("");
-const sortDate = ref(null);
-const sortStatus = ref(null);
 
 const fetchData = async () => {
   const params = new URLSearchParams();
@@ -78,6 +80,9 @@ const fetchData = async () => {
   if (response.status == 200) {
     tasksStore.tasks = data.data.data;
     lastPage.value = data.data.last_page;
+  } else if (response.status == 401) {
+    authStore.clearToken()
+    router.push('/login');
   }
 };
 
@@ -168,7 +173,8 @@ onBeforeUnmount(() => {
       </div>
       <div class="flex w-full flex-col lg:flex-row lg:justify-end">
         <form @submit.prevent="searchTrigger()">
-          <input v-model="search" class="w-full text-sm bg-slate-50 border border-slate-200 rounded-3xl px-3 py-2 lg:hidden mt-4" type="text"
+          <input v-model="search"
+            class="w-full text-sm bg-slate-50 border border-slate-200 rounded-3xl px-3 py-2 lg:hidden mt-4" type="text"
             placeholder="Search...">
         </form>
 
@@ -222,7 +228,7 @@ onBeforeUnmount(() => {
       </div>
     </div>
     <div class="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <TaskCardComponent :task="task" v-for="task in tasksStore.tasks" />
+      <TaskCardComponent :task="task" v-for="(task, index) in tasksStore.tasks" :key="index + 'card'" />
       <div
         class="border border-slate-200 cursor-pointer bg-slate-50 hover:bg-slate-100 p-5 rounded-3xl flex items-center flex-col justify-center">
         <span class="font-semibold text-8xl text-slate-200">+</span>
@@ -230,7 +236,7 @@ onBeforeUnmount(() => {
       </div>
     </div>
     <div class="pages flex mt-6 space-x-2">
-      <button v-for="pageNumber in lastPage" @click="changePage(pageNumber)"
+      <button v-for="(pageNumber, index) in lastPage" :key="index + 'page'" @click="changePage(pageNumber)"
         :class="{ 'bg-slate-50': page == pageNumber, 'hover:bg-slate-50': page != pageNumber }"
         class="w-6 h-6 text-slate-500 border border-slate-200 text-sm flex items-center justify-center rounded-xl p-4">
         {{ pageNumber }}
@@ -241,7 +247,6 @@ onBeforeUnmount(() => {
 
 <style>
 .dp__pointer {
-  /* max-height: 25px; */
   @apply text-xs rounded-3xl;
 }
 </style>
