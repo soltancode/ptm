@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, defineProps } from 'vue';
 
-const props = defineProps({
+defineProps({
   task: {
     type: Object,
     required: true
