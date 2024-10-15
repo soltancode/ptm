@@ -263,7 +263,7 @@ onBeforeUnmount(() => {
         :key="index + 'card'" />
       <RouterLink to="/create">
         <div
-          class="border border-slate-200 cursor-pointer bg-slate-50 hover:bg-slate-100 p-5 rounded-3xl flex items-center flex-col justify-center">
+          class="border border-slate-200 cursor-pointer bg-slate-50 hover:bg-slate-100 p-8 rounded-3xl flex items-center flex-col justify-center">
           <span class="font-semibold text-8xl text-slate-200">+</span>
           <span class="text-sm text-slate-300 mb-6">Create New Task</span>
         </div>
