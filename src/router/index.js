@@ -25,6 +25,15 @@ const router = createRouter({
       component: () => import("../views/CreateTask.vue"),
     },
     {
+      path: "/edit/:id",
+      name: "edit",
+      meta: {
+        layout: "DashboardLayout",
+        middleware: "auth",
+      },
+      component: () => import("../views/EditTask.vue"),
+    },
+    {
       path: "/login",
       name: "login",
       meta: {

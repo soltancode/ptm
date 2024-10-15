@@ -17,7 +17,7 @@ const props = defineProps({
 });
 
 const trigger = () => {
-  emit('triggerEvent');
+    emit('triggerEvent');
 }
 
 const handleClickOutside = (event) => {
@@ -92,7 +92,9 @@ onBeforeUnmount(() => {
                     <div v-if="open"
                         class="border border-slate-100 bg-white rounded-xl text-xs p-2 absolute top-5 right-0">
                         <ul class="space-y-1">
-                            <li class="cursor-pointer hover:text-blue-600">Edit Task</li>
+                            <RouterLink :to="'/edit/' + task.id">
+                                <li class="cursor-pointer hover:text-blue-600">Edit Task</li>
+                            </RouterLink>
                             <li @click="deleteTask()" class="cursor-pointer hover:text-blue-600">Delete</li>
                         </ul>
                     </div>
