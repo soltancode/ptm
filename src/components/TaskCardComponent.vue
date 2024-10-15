@@ -27,7 +27,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="border border-slate-100 bg-slate-50/20 p-5 rounded-3xl">
+    <div class="border border-slate-100 bg-slate-50/20 p-5 rounded-3xl flex flex-col justify-between">
         <div>
             <div class="flex items-start justify-between relative">
                 <div>

@@ -54,8 +54,12 @@ const login = async () => {
 
       <form @submit.prevent="login" class="mt-8 flex flex-col w-80">
         <h3 class="font-extrabold text-2xl text-slate-700">Sign In</h3>
-        <span class="text-slate-600 text-sm mt-1 mb-2">Don't have an account? <RouterLink to="/register"
-            class="ptm-link">Sign Up</RouterLink></span>
+        <span class="text-slate-600 text-sm mt-1 mb-2">
+          Don't have an account? 
+          <RouterLink to="/register" class="ptm-link">
+            Sign Up
+          </RouterLink>
+        </span>
         <div v-if="errorMessage" class="text-xs my-2 bg-red-500 p-2 rounded-3xl text-white">
           <p>{{ errorMessage }}</p>
         </div>
