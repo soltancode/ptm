@@ -10,6 +10,7 @@ const authStore = useAuthStore();
 
 const title = ref("");
 const description = ref("");
+const status = ref(0);
 const dueDate = ref("");
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -18,7 +19,8 @@ const createTask = async () => {
   const payload = {
     title: title.value,
     description: description.value,
-    due_date: dueDate.value
+    due_date: dueDate.value,
+    status: status.value
   };
 
   errorMessage.value = null;
@@ -68,6 +70,13 @@ const createTask = async () => {
           <input v-model="title" type="text" class="ptm-input" placeholder="Title">
           <input v-model="description" type="text" class="ptm-input" placeholder="Description">
           <input v-model="dueDate" type="date" class="ptm-input" placeholder="Due Date">
+          <div>
+            <select v-model="status" class="ptm-input min-h-11 w-full lg:w-fit">
+              <option value="0">To Do</option>
+              <option value="1">In Progress</option>
+              <option value="2">Completed</option>
+            </select>
+          </div>
         </div>
         <button type="submit" class="ptm-button mt-2 w-full lg:w-fit">Create</button>
       </form>
