@@ -175,6 +175,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener('click', handleClickOutside)
+  tasksStore.tasks = null;
 })
 </script>
 
