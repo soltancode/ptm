@@ -7,6 +7,7 @@ import { useRouter } from 'vue-router';
 const email = ref('');
 const password = ref('');
 const errorMessage = ref(null);
+const loading = ref(false);
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -26,6 +27,7 @@ const login = async () => {
 
   errorMessage.value = null;
 
+  loading.value = true;
   const response = await fetch(`${apiBaseUrl}/login`, {
     method: 'POST',
     headers: {
@@ -34,6 +36,7 @@ const login = async () => {
     },
     body: JSON.stringify(payload)
   });
+  loading.value = false;
 
   const data = await response.json();
 
@@ -49,6 +52,11 @@ const login = async () => {
 
 <template>
   <div class="flex flex-col items-center">
+    <div v-if="loading" class="overlay z-20">
+      <div class="overlay__inner">
+        <div class="overlay__content"><span class="spinner"></span></div>
+      </div>
+    </div>
     <div>
       <LogoComponent class="mt-16 lg:mt-20" />
 

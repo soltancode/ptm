@@ -8,6 +8,7 @@ const email = ref('');
 const username = ref('');
 const password = ref('');
 const passwordConfirmation = ref('');
+const loading = ref(false);
 
 const errorMessage = ref(null);
 
@@ -31,6 +32,7 @@ const register = async () => {
 
   errorMessage.value = null;
 
+  loading.value = true;
   const response = await fetch(`${apiBaseUrl}/register`, {
     method: 'POST',
     headers: {
@@ -39,6 +41,7 @@ const register = async () => {
     },
     body: JSON.stringify(payload)
   });
+  loading.value = false;
 
   const data = await response.json();
 
@@ -54,6 +57,11 @@ const register = async () => {
 
 <template>
   <div class="flex flex-col items-center">
+    <div v-if="loading" class="overlay z-20">
+      <div class="overlay__inner">
+        <div class="overlay__content"><span class="spinner"></span></div>
+      </div>
+    </div>
     <div>
       <LogoComponent class="mt-16 lg:mt-20" />
 
