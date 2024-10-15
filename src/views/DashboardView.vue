@@ -256,7 +256,7 @@ onBeforeUnmount(() => {
       </div>
     </div>
     <div class="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <TaskCardComponent :task="task" v-for="(task, index) in tasksStore.tasks" :key="index + 'card'" />
+      <TaskCardComponent @triggerEvent="fetchData()" :task="task" v-for="(task, index) in tasksStore.tasks" :key="index + 'card'" />
       <div
         class="border border-slate-200 cursor-pointer bg-slate-50 hover:bg-slate-100 p-5 rounded-3xl flex items-center flex-col justify-center">
         <span class="font-semibold text-8xl text-slate-200">+</span>
