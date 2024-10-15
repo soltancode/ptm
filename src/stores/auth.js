@@ -24,11 +24,11 @@ export const useAuthStore = defineStore('auth', {
     },
   },
   getters: {
-    getUsername: (state) => {
-      return state.username || localStorage.getItem('username');
+    getUsername: () => {
+      return localStorage.getItem('username');
     },
-    getToken: (state) => {
-      return state.token || localStorage.getItem('token');
+    getToken: () => {
+      return localStorage.getItem('token');
     },
   },
 });

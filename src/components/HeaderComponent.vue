@@ -44,6 +44,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     window.removeEventListener('click', handleClickOutside)
+    authStore.username = null;
 })
 </script>
 
